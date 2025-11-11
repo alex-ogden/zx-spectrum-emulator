@@ -1,0 +1,1 @@
+g++-15  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names "CMakeFiles/zx-spectrum-emulator.dir/src/main.cpp.o" -o zx-spectrum-emulator -F/Library/Frameworks  -Wl,-rpath,/Library/Frameworks /Library/Frameworks/SDL2.framework/Versions/A/SDL2

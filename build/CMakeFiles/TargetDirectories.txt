@@ -1,0 +1,3 @@
+/Users/alex/projects/learning-cpp/zx-spectrum-emulator/build/CMakeFiles/zx-spectrum-emulator.dir
+/Users/alex/projects/learning-cpp/zx-spectrum-emulator/build/CMakeFiles/edit_cache.dir
+/Users/alex/projects/learning-cpp/zx-spectrum-emulator/build/CMakeFiles/rebuild_cache.dir
