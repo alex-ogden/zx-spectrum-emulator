@@ -19,8 +19,8 @@ int main(int argc, char *argv[]) {
 
   std::string basic_rom = argv[1];
 
-  if (std::filesystem::exists(filename)) {
-    // DO something
+  if (std::filesystem::exists(basic_rom)) {
+    return 0; // do nothing for now
   }
 
   return 0;
