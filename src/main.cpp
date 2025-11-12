@@ -1,4 +1,5 @@
-#include "zxspectrum.h"
+#include "memory.h"
+#include "z80.h"
 
 #include <SDL2/SDL.h>
 #include <chrono>
@@ -9,7 +10,8 @@
 #include <thread>
 
 int main(int argc, char *argv[]) {
-  ZXSpectrum emu;
+  Memory mem;
+  Z80 cpu(mem);
 
   // User must provide at least a BASIC ROM
   if (argc < 2) {
@@ -20,8 +22,15 @@ int main(int argc, char *argv[]) {
   std::string basic_rom = argv[1];
 
   if (std::filesystem::exists(basic_rom)) {
-    return 0; // do nothing for now
+    if (!mem.load_rom(basic_rom, 0x0000)) {
+      return 1;
+    } // Load ROM into memory (ROM) at 0x0000
+  } else {
+    std::println(stderr, "Could not find file: {}", basic_rom);
+    return 1;
   }
+
+  cpu.reset();
 
   return 0;
 }
