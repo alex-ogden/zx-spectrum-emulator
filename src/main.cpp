@@ -30,7 +30,14 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  cpu.reset();
+  // For now, just execute some instructions for testing
+  std::println("Starting execution tests...");
+  for (int i = 0; i < 10; ++i) {
+    uint8_t cycles = cpu.emulate_cycle();
+    std::println("PC: 0x{:04X}, Cycles: {}", cpu.get_pc(), cycles);
+  }
+
+  std::println("Tests complete");
 
   return 0;
 }

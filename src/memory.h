@@ -19,9 +19,13 @@ public:
   void write_byte(uint16_t address, uint8_t value);
   void write_word(uint16_t address, uint16_t value);
 
+  uint8_t get_contention_delay(uint16_t address, uint64_t cycle);
+
   bool load_rom(const std::string &filename, uint16_t start_address);
 
 private:
+  bool is_contended_address(uint16_t address) const;
+
   /* Memory layout:
         0x0000 -> 0x3FFF (16KB)     - ROM (BASIC Interpreter)
         0x4000 -> 0x57FF (6144B)    - Screen pixel data         -| ULA memory

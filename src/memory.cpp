@@ -4,9 +4,9 @@ Memory::Memory() { reset(); }
 Memory::~Memory() {}
 
 void Memory::reset() {
-  std::print("Starting memory reset routine");
+  std::println("Starting Memory reset routine");
   ram.fill(0);
-  std::println("Ending memory reset routine");
+  std::println("Ending Memory reset routine");
 }
 
 uint8_t Memory::fetch_byte(uint16_t address) const { return ram[address]; }
@@ -23,6 +23,28 @@ void Memory::write_word(uint16_t address, uint16_t value) {
     return;
   write_byte(address, (uint8_t)value);
   write_byte(address + 1, (uint8_t)(value >> 8));
+}
+
+uint8_t Memory::get_contention_delay(uint16_t address, uint64_t cycles) {
+  // Check if not in contended memory range
+  if (address < 0x4000 || address >= 0x8000)
+    return 0;
+
+  // Calculate position within frame (assuming 69888 t-states per frame)
+  uint32_t frame_cycle = cycles % 69888;
+
+  // Check if we're in border/blanking period (no contention)
+  if (frame_cycle < 14336 || frame_cycle >= 58368)
+    return 0;
+
+  // Calculate delay based on pattern
+  static const std::array<uint8_t, 8> contention_pattern = {6, 5, 4, 3,
+                                                            2, 1, 0, 0};
+  return contention_pattern[frame_cycle % 8];
+}
+
+bool Memory::is_contended_address(uint16_t address) const {
+  return (address >= 0x4000 && address < 0x8000);
 }
 
 bool Memory::load_rom(const std::string &filename, uint16_t start_address) {

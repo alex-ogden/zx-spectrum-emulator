@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <print>
 
 class Memory;
 
@@ -55,9 +56,13 @@ public:
   void set_de(uint16_t value);
   void set_hl(uint16_t value);
 
+  // Helpers for PC/SP/Cycles etc...
+  uint16_t get_pc() const;
+  uint16_t get_sp() const;
+  uint64_t get_total_cycles() const;
+
   // Cycle emulation and opcode decoding
-  void emulate_cycle();
-  void execute_instruction(uint8_t opcode);
+  uint8_t emulate_cycle();
 
 private:
   Memory &memory; // Pointer to memory
@@ -71,4 +76,26 @@ private:
   uint16_t SP;                            // Stack pointer
 
   bool IFF1, IFF2; // Interrupt flip flops
+
+  // Track the total number of cycles
+  uint64_t total_cycles;
+
+  uint8_t read_byte_contended(uint16_t address);
+  void write_byte_contended(uint16_t address, uint8_t value);
+
+  uint8_t execute_instruction(uint8_t opcode);
+  uint8_t execute_cb_instruction(uint8_t subopcode);
+  uint8_t execute_ed_instruction(uint8_t subopcode);
+  uint8_t execute_dd_instruction(uint8_t subopcode);
+  uint8_t execute_fd_instruction(uint8_t subopcode);
+
+  // Instruction functions
+  void add_a(uint8_t value);
+  void sub_a(uint8_t value);
+  void and_a(uint8_t value);
+  void or_a(uint8_t value);
+  void xor_a(uint8_t value);
+  void cp_a(uint8_t value);
+  void inc_8bit(uint8_t &reg);
+  void dec_8bit(uint8_t &reg);
 };
