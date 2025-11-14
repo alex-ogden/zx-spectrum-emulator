@@ -3,6 +3,8 @@
 #include "ula.h"
 #include "z80.h"
 
+#include <cstdint>
+
 ZXSpectrum::ZXSpectrum(Memory &mem, Z80 &cpu) : memory(mem), cpu(cpu) {}
 ZXSpectrum::~ZXSpectrum() {}
 
@@ -11,6 +13,7 @@ void ZXSpectrum::run() {
   uint32_t cycles_this_frame = 0;
 
   running = true;
+  cpu.set_halted(false);
 
   while (running) {
     uint8_t cycles = cpu.emulate_cycle();
@@ -18,6 +21,7 @@ void ZXSpectrum::run() {
 
     if (cycles_this_frame >= CYCLES_PER_FRAME) {
       cycles_this_frame -= CYCLES_PER_FRAME;
+
       // !TODO: Implement cpu interrupt
       // cpu.interrupt();
 

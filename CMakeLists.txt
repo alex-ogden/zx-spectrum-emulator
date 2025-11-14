@@ -19,6 +19,7 @@ include_directories(${SDL2_INCLUDE_DIRS})
 # Add executable
 add_executable(zx-spectrum-emulator 
   src/main.cpp
+  src/zxspectrum.cpp
   src/memory.cpp
   src/z80.cpp
 )

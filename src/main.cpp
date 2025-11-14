@@ -1,10 +1,10 @@
 #include "memory.h"
 #include "z80.h"
+#include "zxspectrum.h"
 
 #include <SDL2/SDL.h>
-#include <chrono>
 #include <filesystem>
-#include <map>
+#include <iostream>
 #include <print>
 #include <string>
 #include <thread>
@@ -12,6 +12,7 @@
 int main(int argc, char *argv[]) {
   Memory mem;
   Z80 cpu(mem);
+  ZXSpectrum zxspectrum(mem, cpu);
 
   // User must provide at least a BASIC ROM
   if (argc < 2) {
@@ -30,14 +31,13 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  // For now, just execute some instructions for testing
-  std::println("Starting execution tests...");
-  for (int i = 0; i < 10; ++i) {
-    uint8_t cycles = cpu.emulate_cycle();
-    std::println("PC: 0x{:04X}, Cycles: {}", cpu.get_pc(), cycles);
-  }
+  std::thread emu_thread([&]() { zxspectrum.run(); });
 
-  std::println("Tests complete");
+  std::println("Emulator running... press Enter to stop");
+  std::cin.get();
+
+  zxspectrum.stop();
+  emu_thread.join();
 
   return 0;
 }

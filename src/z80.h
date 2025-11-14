@@ -1,5 +1,6 @@
 #pragma once
 
+#include <bit>
 #include <cstdint>
 #include <print>
 
@@ -56,6 +57,13 @@ public:
   void set_de(uint16_t value);
   void set_hl(uint16_t value);
 
+  // Pull/Pop functions
+  void push(uint16_t value);
+  uint16_t pop();
+
+  bool get_halted() const;
+  void set_halted(bool halted);
+
   // Helpers for PC/SP/Cycles etc...
   uint16_t get_pc() const;
   uint16_t get_sp() const;
@@ -77,6 +85,9 @@ private:
 
   bool IFF1, IFF2; // Interrupt flip flops
 
+  // Is the CPU halted?
+  bool is_halted;
+
   // Track the total number of cycles
   uint64_t total_cycles;
 
@@ -89,13 +100,33 @@ private:
   uint8_t execute_dd_instruction(uint8_t subopcode);
   uint8_t execute_fd_instruction(uint8_t subopcode);
 
+  // Interrupt functions
+  void enable_interrupt();
+  void disable_interrupt();
+
   // Instruction functions
-  void add_a(uint8_t value);
-  void sub_a(uint8_t value);
+  void add_a_r(uint8_t value);
+  void sub_a_r(uint8_t value);
+  void add_a_n(uint8_t value);
+  void sub_a_n(uint8_t value);
   void and_a(uint8_t value);
   void or_a(uint8_t value);
   void xor_a(uint8_t value);
   void cp_a(uint8_t value);
   void inc_8bit(uint8_t &reg);
   void dec_8bit(uint8_t &reg);
+  void inc_hl_indirect();
+  void dec_hl_indirect();
+  void rla();
+  void rlca();
+  void rra();
+  void rrca();
+  void daa();
+  void cpl();
+  void scf();
+  void ccf();
+  void add_hl_rr(uint16_t opcode);
+
+  // Helper function to check for parity
+  bool has_parity(uint8_t value);
 };
